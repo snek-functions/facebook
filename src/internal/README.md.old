@@ -1,0 +1,49 @@
+# Facebook Post Fetcher
+
+This project is a simple application that fetches posts from a specific Facebook page and removes any posts that are included in a blocklist of post IDs. The application also includes functionality to add new post IDs to the blocklist.
+
+## Getting Started
+
+To get started with this project, you will need to have Node.js and npm (Node Package Manager) installed on your machine. You will also need to have a Facebook developer account and create a new app to get an API key.
+
+Once you have those dependencies installed, you can clone this repository and run `npm install` in the project directory to install the necessary packages.
+
+## Usage
+
+The main entry point for the application is the `fetch.ts` file. This file exports a `fetchPosts` function that takes two arguments: a `pageId` string and an optional `blocklist` of post IDs.
+
+The function returns an array of `Post` objects, which includes the post's ID, message, link, and any attachments. The attachments include an array of media such as photos or videos.
+
+You can add new post IDs to the blocklist by importing the `addIdToBlocklist` function from the `blocklist.ts` file and passing in the ID of the post you want to add to the blocklist.
+
+## Error Handling
+
+The application is designed to throw specific errors when certain conditions are not met. The `errors.ts` file includes custom error classes for invalid arguments passed to a function, errors thrown by the Facebook API, and errors thrown while reading a file.
+
+## Interfaces
+
+The `interfaces.ts` file includes interfaces for a `Post`, an `Attachment`, `Media`, and a `Blocklist`. These interfaces provide structure and type safety for the data being returned from the application.
+
+## Deployment
+
+This application is ready to be deployed as is, you can use the `fetchPosts` function in your own application or you can use the `addIdToBlocklist` function to add post IDs to the blocklist.
+
+## Built With
+
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
+- [Facebook Graph API](https://developers.facebook.com/docs/graph-api)
+- [TypeScript](https://www.typescriptlang.org/)
+
+## Authors
+
+- **Me** - _Initial work_
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+- [Facebook Graph API](https://developers.facebook.com/docs/graph-api) documentation for providing information on how to use the API.
+- [TypeScript](https://www.typescriptlang.org/) documentation for providing information on how to use TypeScript.
