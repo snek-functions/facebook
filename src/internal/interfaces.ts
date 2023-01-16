@@ -12,15 +12,19 @@ export interface Post {
  * Interface for a Facebook post attachment.
  */
 export interface Attachment {
-  media: Media[]
+  media: Media
+  type: string
 }
 
 /**
  * Interface for media in a Facebook post attachment.
  */
 export interface Media {
-  src: string
-  type: string
+  image: {
+    height: number
+    width: number
+    src: string
+  }
 }
 
 /**

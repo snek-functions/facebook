@@ -1,9 +1,9 @@
 import {fn} from './factory'
-import {loadBlocklist} from './internal/blocklist'
-import {fetchPosts} from './internal/fetch'
-import {Blocklist} from './internal/interfaces'
+import {loadBlocklist} from './internal/blocklist.js'
+import {fetchPosts} from './internal/fetch.js'
+import {Blocklist} from './internal/interfaces.js'
 
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN || 'YOUR_ACCESS_TOKEN'
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN || 'EAAwJPVVvT54BAPqzhOsxX9EGl3WJHTX84sxYMKK0JUnvOODHsFUkcgxcBDGk4vDfv4cbjqW1ySsZAnEy4H2P4GiyI7USlZAnwNfz7BCwEQ2dn21A4piRkBl8333S4i5ZBD5NAo7GEEGxxbDwmkGEkxprkNNKd7bI98U5RC8qdTbiRkTl8CbMTrjyF1ffGegZBLyUaYEoawZDZD'
 const BLOCKLIST_PATH = process.env.PAGE_ID || 'path/to/blocklist.parquet'
 
 const getPageFeed = fn<{pageId: string}, string>(
@@ -16,7 +16,7 @@ const getPageFeed = fn<{pageId: string}, string>(
     // Log the returned posts
     console.log(posts)
 
-    return JSON.stringify(posts)
+    return posts
   },
   {
     name: 'getPageFeed',

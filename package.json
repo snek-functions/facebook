@@ -14,9 +14,14 @@
   },
   "dependencies": {
     "@snek-at/functions": "*",
-    "@types/parquetjs": "^0.10.3"
+    "duckdb": "^0.6.1",
+    "fb": "^2.0.0",
+    "parquetjs": "^0.11.2",
+    "parquetjs-lite": "^0.8.7",
+    "types": "^0.1.1"
   },
   "devDependencies": {
+    "@types/parquetjs": "^0.10.3",
     "commitizen": "^4.2.5",
     "git-cz": "^4.9.0",
     "nodemon": "^2.0.19",
