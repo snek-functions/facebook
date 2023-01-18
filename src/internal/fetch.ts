@@ -2,6 +2,8 @@ import {spawnChild} from '../factory.js'
 import {FacebookApiError, InvalidArgumentError} from './errors.js'
 import {Attachment, Blocklist, Media, Post} from './interfaces.js'
 
+const POSTS_PATH = '/var/duckdb/_posts.parquet'
+
 // Define API endpoints
 const baseUrl = 'https://graph.facebook.com/v15.0/'
 const postsEndpoint = `${baseUrl}/{pageId}/posts?fields=id,message,permalink_url&limit=10`
@@ -35,18 +37,15 @@ export async function fetchPosts(
     )
   }
 
-  // Load posts from a parquet file
-  let posts = JSON.parse(
-    await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
-      'retrieve',
-      '/var/duckdb/_posts.parquet'
-    ])
-  )
+  // Check if user.parquet file exists and if not, create it
+  const fs = await import('fs')
 
   const now = new Date()
+  let posts: Post[] = []
+
   // If posts are empty, fetch posts from Facebook
   if (
-    posts.length === 0 ||
+    fs.existsSync(POSTS_PATH) ||
     lastfetch === undefined ||
     now.getTime() - lastfetch.getTime() > 3600000
   ) {
@@ -101,6 +100,14 @@ export async function fetchPosts(
         throw new Error(errorMessage)
       }
     }
+  } else {
+    // Load posts from a parquet file
+    posts = JSON.parse(
+      await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
+        'retrieve',
+        '/var/duckdb/_posts.parquet'
+      ])
+    )
   }
 
   // Filter out the posts that are on the blocklist (if provided)
@@ -114,6 +121,7 @@ export async function fetchPosts(
       return post
     })
   }
+
   // Reduce to 5 posts
   posts = posts.slice(0, limit)
 
