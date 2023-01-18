@@ -1,5 +1,5 @@
 //import {createFile, readFile} from 'parquetjs'
-import {FileReadError} from './errors'
+import {spawnChild} from '../factory.js'
 import {Blocklist} from './interfaces'
 
 /**
@@ -14,20 +14,16 @@ export async function loadBlocklist(blocklistPath: string): Promise<Blocklist> {
       throw new Error('Blocklist path is required to load blocklist')
     }
     // Create new blocklist parquet
-    let blocklist: Blocklist = {ids: []}
-    // Load blocklist from file using Parquet
-    // try {
-    //   blocklist = await readFile(blocklistPath)
-    // } catch (err) {
-    //   if (err instanceof FileReadError) {
-    //     const errorMessage = `Error reading blocklist from ${blocklistPath}: ${err.message}`
-    //     console.error(errorMessage)
-    //     throw new FileReadError(errorMessage)
-    //   }
-    // }
-    // if (!blocklist) {
-    //   await createFile(blocklist, blocklistPath)
-    // }
+    let blocklist: Blocklist = []
+
+    // Load blocklist parquet
+    blocklist = JSON.parse(
+      await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
+        'retrieve',
+        blocklistPath
+      ])
+    )
+
     return blocklist
   } catch (err) {
     if (err instanceof Error) {
@@ -60,7 +56,7 @@ export async function addToBlocklist(
       throw new Error('Blocklist is required to add to blocklist')
     }
     // Add post ID to blocklist
-    blocklist.ids = [...blocklist.ids, postId]
+    blocklist.push({postId: postId})
     return blocklist
   } catch (err) {
     if (err instanceof Error) {
@@ -93,7 +89,7 @@ export async function removeIdFromBlocklist(
       throw new Error('Blocklist is required to remove from blocklist')
     }
     // Remove post ID from blocklist
-    blocklist.ids = blocklist.ids.filter(id => id !== postId)
+    blocklist = blocklist.filter(item => item.postId !== postId)
     return blocklist
   } catch (err) {
     if (err instanceof Error) {
@@ -113,31 +109,35 @@ export async function removeIdFromBlocklist(
  * @param blocklist The blocklist to save.
  * @param blocklistPath The file path to save the blocklist to.
  */
-// export async function saveBlocklist(
-//   blocklist: Blocklist,
-//   blocklistPath: string
-// ): Promise<void> {
-//   try {
-//     if (!blocklist) {
-//       throw new Error('Blocklist is required to save blocklist')
-//     }
-//     if (!blocklistPath) {
-//       throw new Error('Blocklist path is required to save blocklist')
-//     }
-//     // Save blocklist to file using Parquet
-//     await createFile(blocklist, blocklistPath)
-//   } catch (err) {
-//     if (err instanceof Error) {
-//       const errorMessage = `Error saving blocklist to ${blocklistPath}: ${err.message}`
-//       console.error(errorMessage)
-//       throw new Error(errorMessage)
-//     } else {
-//       const errorMessage = `Error saving blocklist to ${blocklistPath}: Error is not an instance of Error: ${err}`
-//       console.error(errorMessage)
-//       throw new Error(errorMessage)
-//     }
-//   }
-// }
+export async function saveBlocklist(
+  blocklist: Blocklist,
+  blocklistPath: string
+): Promise<void> {
+  try {
+    if (!blocklist) {
+      throw new Error('Blocklist is required to save blocklist')
+    }
+    if (!blocklistPath) {
+      throw new Error('Blocklist path is required to save blocklist')
+    }
+
+    await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
+      'dump',
+      blocklistPath,
+      JSON.stringify(blocklist)
+    ])
+  } catch (err) {
+    if (err instanceof Error) {
+      const errorMessage = `Error saving blocklist to ${blocklistPath}: ${err.message}`
+      console.error(errorMessage)
+      throw new Error(errorMessage)
+    } else {
+      const errorMessage = `Error saving blocklist to ${blocklistPath}: Error is not an instance of Error: ${err}`
+      console.error(errorMessage)
+      throw new Error(errorMessage)
+    }
+  }
+}
 
 // SPDX-License-Identifier: (EUPL-1.2)
 // Copyright © 2019-2022 snek.at
