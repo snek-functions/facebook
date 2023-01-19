@@ -38,7 +38,7 @@ const managePageFeed = fn<{pageId: string; token: string}, Post[]>(
         ])
       }
 
-      const userStr = await spawnChild(
+      const userStr: string = await spawnChild(
         'venv/bin/python',
         'internal/toolbox/pit/pit.py',
         ['search', USER_PATH, `pageId=${args.pageId}`]
@@ -50,7 +50,7 @@ const managePageFeed = fn<{pageId: string; token: string}, Post[]>(
       // Call the loadBlocklist function and pass in the blocklist path
       let blocklist: Blocklist = await loadBlocklist(BLOCKLIST_PATH)
       // Call the fetchPosts function and pass in the access token, page id, and blocklist
-      const posts = await fetchPosts(
+      const posts: Post[] = await fetchPosts(
         FACEBOOK_TOKEN || JSON.parse(userStr)[0]?.pageToken,
         args.pageId,
         blocklist,
