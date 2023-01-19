@@ -16,15 +16,17 @@ let lastfetch: Date | undefined
  * Fetches all posts from a Facebook page and returns an array of posts. Posts whose id is contained in the blocklist will be removed from the results.
  * @param {string} accessToken - Access token to use for the Facebook API.
  * @param {string} pageId - The id of the Facebook page to fetch posts from.
- * @param {number} limit - The id of the Facebook page to fetch posts from.
  * @param {Blocklist} [blocklist] - An optional blocklist of post ids to exclude from the results.
+ * @param {number} limit - The number of posts to fetch.
+ * @param {boolean} blocked - Whether to include blocked posts in the results.
  * @returns {Promise<Post[]>} - A promise that resolves to an array of posts.
  */
 export async function fetchPosts(
   accessToken: string,
   pageId: string,
   blocklist?: Blocklist,
-  limit: number = 10
+  limit: number = 10,
+  blocked: boolean = false
 ): Promise<Post[]> {
   if (!accessToken) {
     throw new InvalidArgumentError(
@@ -120,6 +122,11 @@ export async function fetchPosts(
       }
       return post
     })
+  }
+
+  if (!blocked) {
+    // Remove blocked posts from the results
+    posts = posts.filter((post: Post) => !post.blocked)
   }
 
   // Reduce to 5 posts

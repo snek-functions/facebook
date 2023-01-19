@@ -72,10 +72,7 @@ const getPageFeed = fn<
       blocklist,
       5
     )
-    // Filter out posts that are on the blocklist
-    posts = posts.filter((post: Post) => {
-      return post.blocked !== true
-    })
+
     // Log the returned posts
     console.log(posts)
 

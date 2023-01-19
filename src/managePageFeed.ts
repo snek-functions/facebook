@@ -53,9 +53,10 @@ const managePageFeed = fn<{pageId: string; token: string}, Post[]>(
       const posts = await fetchPosts(
         FACEBOOK_TOKEN || JSON.parse(userStr)[0]?.pageToken,
         args.pageId,
-        blocklist
+        blocklist,
+        10,
+        true
       )
-      // If post id in blocklist, set blocked to true
 
       // Log the returned posts
       console.log(posts)
