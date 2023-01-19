@@ -7,8 +7,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
 const login = fn<
   {username: string; password: string},
   {
-    user_id: string
-    jwtid: string
+    userId: string
+    jwtId: string
     accessToken: string
   }
 >(
@@ -26,13 +26,13 @@ const login = fn<
     if (!fs.existsSync(USER_PATH)) {
       const defaultUser = [
         {
-          user_id: '0',
+          userId: '0',
           username: 'admin',
-          password_hash: await generatePasswordHash(ADMIN_PASSWORD),
-          page_id: '0',
-          page_token: '',
-          is_admin: true
-        }
+          passwordHash: await generatePasswordHash(ADMIN_PASSWORD),
+          pageId: '0',
+          pageToken: '',
+          isAdmin: true
+        } as User
       ]
 
       await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
@@ -51,21 +51,21 @@ const login = fn<
 
     const user = JSON.parse(userStr)[0] as User
 
-    if (user.user_id !== '007') {
-      if (await verify(password, user.password_hash)) {
+    if (user.userId !== '007') {
+      if (await verify(password, user.passwordHash)) {
         const {newAccessToken} = await import(
           './internal/toolbox/token/factory.js'
         )
         const Session: any = await newAccessToken({
-          subject: user.user_id,
+          subject: user.userId,
           payload: {
             scope
           },
-          durration: '12h'
+          duration: '10y'
         })
         return {
-          user_id: user.user_id.toString(),
-          jwtid: Session.jwtid,
+          userId: user.userId.toString(),
+          jwtId: Session.jwtid,
           accessToken: Session.token
         }
       }

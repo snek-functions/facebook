@@ -15,7 +15,7 @@ export const verify = (token: string) => {
 }
 
 export const newToken = (
-  {payload, subject, durration}: Token,
+  {payload, subject, duration}: Token,
   type: TokenTypes,
   options: {
     jwtid?: string
@@ -37,7 +37,7 @@ export const newToken = (
       // Identifies the subject of the JWT
       subject: subject,
       // Identifies the expiration time on and after which the JWT must not be accepted for processing. The value must be in seconds or a string describing a time span vercel/ms
-      expiresIn: durration,
+      expiresIn: duration,
 
       // Identifies principal that issued the JWT
       issuer: 'snek-0',
@@ -56,15 +56,15 @@ export const newToken = (
 export const newAccessToken = ({
   subject,
   payload,
-  durration = '5m'
+  duration = '5m'
 }: NewAccessToken) => {
-  return newToken({payload, subject, durration}, 'access')
+  return newToken({payload, subject, duration}, 'access')
 }
 
 export const newRefreshToken = ({
   accessToken,
   payload,
-  durration = '30d'
+  duration = '30d'
 }: NewRefreshToken) => {
   // verify a token symmetric
   const {sub, jti} = verify(accessToken)
@@ -73,7 +73,7 @@ export const newRefreshToken = ({
     {
       payload,
       subject: sub,
-      durration
+      duration
     },
     'refresh',
     {
@@ -86,7 +86,7 @@ export const newRefreshToken = ({
 
 export const refreshTokens = (payload: {
   refreshToken: string
-  durration?: string
+  duration?: string
 }) => {
   // verify a token symmetric
   const decodedRefreshToken = verify(payload.refreshToken)
@@ -97,7 +97,7 @@ export const refreshTokens = (payload: {
       scope: decodedRefreshToken.scope,
       fresh: false
     },
-    durration: payload.durration
+    duration: payload.duration
   })
 
   const refreshToken = newRefreshToken({
@@ -105,7 +105,7 @@ export const refreshTokens = (payload: {
     payload: {
       scope: decodedRefreshToken.scope
     },
-    durration: payload.durration
+    duration: payload.duration
   })
 
   return {

@@ -24,7 +24,7 @@ export interface TokenPayload extends JwtPayload {
 export interface Token {
   payload: TokenPayload
   subject?: string
-  durration?: string
+  duration?: string
 }
 
 export interface NewAccessToken extends Token {
@@ -38,6 +38,6 @@ export interface NewRefreshToken extends Token {
   accessToken: string
   payload: TokenPayload & {
     scope: AuthorizationScope
-    durration?: string
+    duration?: string
   }
 }

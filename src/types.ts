@@ -4,10 +4,10 @@ export interface TokenPair {
 }
 
 export interface User {
-  user_id: string
+  userId: string
   username: string
-  password_hash: string
-  page_id: string
-  page_token: string
-  is_admin: boolean
+  passwordHash: string
+  pageId: string
+  pageToken: string
+  isAdmin: boolean
 }

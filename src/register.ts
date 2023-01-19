@@ -1,4 +1,5 @@
 import {fn, spawnChild} from './factory'
+import {User} from './types'
 
 const USER_PATH = process.env.USER_PATH || '/var/duckdb/_user_fb.parquet'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
@@ -6,12 +7,12 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
 const register = fn<
   {
     token: string
-    user_id: string
+    userId: string
     username: string
     password: string
-    page_id: string
-    page_token: string
-    is_admin: boolean
+    pageId: string
+    pageToken: string
+    isAdmin: boolean
   },
   void
 >(
@@ -31,13 +32,13 @@ const register = fn<
       if (!fs.existsSync(USER_PATH)) {
         const defaultUser = [
           {
-            user_id: '0',
+            userId: '0',
             username: 'admin',
-            password_hash: await generatePasswordHash(args.password),
-            page_id: '0',
-            page_token: '',
-            is_admin: true
-          }
+            passwordHash: await generatePasswordHash(args.password),
+            pageId: '0',
+            pageToken: '',
+            isAdmin: true
+          } as User
         ]
 
         await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
@@ -53,22 +54,22 @@ const register = fn<
           ])
         )
         users.push({
-          user_id: args.user_id,
+          userId: args.userId,
           username: args.username,
-          password_hash: await generatePasswordHash(args.password),
-          page_id: args.page_id,
-          page_token: args.page_token,
-          is_admin: args.is_admin
-        })
+          passwordHash: await generatePasswordHash(args.password),
+          pageId: args.pageId,
+          pageToken: args.pageToken,
+          isAdmin: args.isAdmin
+        } as User)
         await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
           'dump',
           USER_PATH,
           JSON.stringify(users)
         ])
       }
+    } else {
+      throw new Error('Unable to authenticate')
     }
-
-    //throw new Error(`Unable to authenticate: ${args.username}`)
   },
   {
     name: 'register'
