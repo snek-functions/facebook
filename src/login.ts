@@ -1,8 +1,6 @@
+import {ADMIN_PASSWORD, USER_PATH} from './constants.js'
 import {fn, spawnChild} from './factory'
 import {User} from './types'
-
-const USER_PATH = process.env.USER_PATH || '/var/duckdb/_user_fb.parquet'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
 
 const login = fn<
   {username: string; password: string},

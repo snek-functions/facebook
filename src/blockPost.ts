@@ -1,3 +1,4 @@
+import {BLOCKLIST_PATH} from './constants.js'
 import {fn} from './factory'
 import {
   addToBlocklist,
@@ -5,9 +6,6 @@ import {
   saveBlocklist
 } from './internal/blocklist.js'
 import {Blocklist} from './internal/interfaces.js'
-
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN || '<ACCESS_TOKEN>'
-const BLOCKLIST_PATH = process.env.PAGE_ID || '/var/duckdb/_blacklist.parquet'
 
 const blockPost = fn<{postId: string; token: string}, void>(
   async (args, _, {req, res}) => {

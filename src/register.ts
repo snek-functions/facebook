@@ -1,8 +1,6 @@
+import {USER_PATH} from './constants.js'
 import {fn, spawnChild} from './factory'
 import {User} from './types'
-
-const USER_PATH = process.env.USER_PATH || '/var/duckdb/_user_fb.parquet'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
 
 const register = fn<
   {
@@ -22,10 +20,6 @@ const register = fn<
       const {generatePasswordHash} = await import(
         './internal/toolbox/hash/hash.js'
       )
-      const scope = {
-        res1: ['read', 'write'],
-        res2: ['read', 'write']
-      }
 
       // Check if user.parquet file exists and if not, create it
       const fs = await import('fs')

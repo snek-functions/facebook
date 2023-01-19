@@ -105,7 +105,7 @@ export async function fetchPosts(
     posts = JSON.parse(
       await spawnChild('venv/bin/python', 'internal/toolbox/pit/pit.py', [
         'retrieve',
-        '/var/duckdb/_posts.parquet'
+        POSTS_PATH
       ])
     )
   }

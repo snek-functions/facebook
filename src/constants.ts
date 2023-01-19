@@ -1,5 +1,12 @@
 import {url} from './factory'
 
+export const USER_PATH = process.env.USER_PATH || '/var/duckdb/_user_fb.parquet'
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ciscocisco'
+
+export const FACEBOOK_TOKEN = process.env.FACEBOOK_TOKEN || ''
+export const BLOCKLIST_PATH =
+  process.env.BLOCKLIST_PATH || '/var/duckdb/_blacklist.parquet'
+
 export const SHARED_SECRET = process.env.SECRET_KEY || 'ciscocisco'
 export const TOKEN_COOKIE_NAME = 'T'
 export const REFRESH_TOKEN_COOKIE_NAME = 'RT'
