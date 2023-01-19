@@ -5,7 +5,7 @@ export const url = process.env.IS_OFFLINE
   ? process.env.CODESPACE_NAME
     ? `https://${process.env.CODESPACE_NAME}-4090.githubpreview.dev/graphql`
     : 'http://localhost:4090/graphql'
-  : `${process.env.ENDPOINT_URL_AUTHENTICATION}`
+  : `${process.env.ENDPOINT_URL_FACEBOOK}`
 
 export const fn = makeFn({
   url
