@@ -14,10 +14,6 @@ const login = fn<
     const {verify, generatePasswordHash} = await import(
       './internal/toolbox/hash/hash.js'
     )
-    const scope = {
-      res1: ['read', 'write'],
-      res2: ['read', 'write']
-    }
 
     // Check if user.parquet file exists and if not, create it
     const fs = await import('fs')
@@ -54,6 +50,12 @@ const login = fn<
         const {newAccessToken} = await import(
           './internal/toolbox/token/factory.js'
         )
+        const scope = {
+          api: ['read', 'write']
+        }
+        if (user.isAdmin) {
+          scope.api.push('register')
+        }
         const Session: any = await newAccessToken({
           subject: user.userId,
           payload: {

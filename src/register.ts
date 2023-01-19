@@ -16,7 +16,7 @@ const register = fn<
 >(
   async (args, _, {req, res}) => {
     const {verify} = await import('./internal/toolbox/token/factory.js')
-    if (verify(args.token)) {
+    if (verify(args.token).scope?.api.includes('register')) {
       const {generatePasswordHash} = await import(
         './internal/toolbox/hash/hash.js'
       )
@@ -47,6 +47,17 @@ const register = fn<
             USER_PATH
           ])
         )
+
+        // Check if user already exist else push new user
+        if (
+          users.find(
+            (user: User) =>
+              user.username === args.username || user.userId === args.userId
+          )
+        ) {
+          throw new Error('User already exists')
+        }
+
         users.push({
           userId: args.userId,
           username: args.username,
@@ -62,7 +73,7 @@ const register = fn<
         ])
       }
     } else {
-      throw new Error('Unable to authenticate')
+      throw new Error('Not authorized to register users')
     }
   },
   {
